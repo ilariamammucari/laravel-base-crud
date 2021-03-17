@@ -50,8 +50,7 @@ class FilmController extends Controller
      */
     public function show($id)
     {
-        $id_film = Movie::find($id);
-        
+        $id_film = Movie::findOrFail($id);
         $data = [
             'film' => $id_film
         ];
