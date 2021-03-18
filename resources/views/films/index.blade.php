@@ -11,5 +11,8 @@
                 <a class="nav-link" href="{{ route('film.show', ['film' => $film->id]) }}">Dettagli</a>
             </li>
         </ul>
-    @endforeach
+        @endforeach
+        <button type="button" class="btn btn-secondary">
+            <a href="{{ route('film.create') }}">Aggiungi film</a>
+        </button>
 @endsection
