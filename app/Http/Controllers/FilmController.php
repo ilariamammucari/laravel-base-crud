@@ -54,7 +54,7 @@ class FilmController extends Controller
         $data = [
             'film' => $id_film
         ];
-        return view('films.dettagli',$data);
+        return view('films.show',$data);
     }
 
     /**
