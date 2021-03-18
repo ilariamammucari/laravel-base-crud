@@ -41,8 +41,18 @@ class FilmController extends Controller
     {
         $data = $request->all();
         $nuovoFilm = new Movie();
+
+        $request->validate([
+            'titolo' => 'required|max:255',
+            'genere' => 'required|max:23',
+            'trama' => 'required',
+            'regista' => 'required|max:80',
+            'anno' => 'required'
+        ]);
+
         $nuovoFilm->fill($data);
         $nuovoFilm->save();
+
 
         return redirect()->route('film.index');
     }

@@ -2,6 +2,7 @@
 @section('titolo', 'Pagina Films')
 
 @section('content')
+
     @foreach ($films as $film)
         <h1>
             {{ $film->titolo }}
