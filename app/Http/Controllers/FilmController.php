@@ -110,7 +110,7 @@ class FilmController extends Controller
         ]);
         $film->update($data);
 
-        return redirect()->route('film.show',$film);
+        return redirect()->route('film.show',$film)->with(['messaggio' => 'Complimenti il tuo film è stato modificato!']);
     }
 
     /**
@@ -122,6 +122,6 @@ class FilmController extends Controller
     public function destroy(Movie $film)
     {
         $film->delete();
-        return redirect()->route('film.index');
+        return redirect()->route('film.index')->with(['messaggio' => 'Il tuo film è stato eliminato!']);;
     }
 }

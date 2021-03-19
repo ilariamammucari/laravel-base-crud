@@ -19427,6 +19427,12 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+$(document).ready(function () {
+  $('.modal .close').on('click', function () {
+    $(this).closest('.modal').fadeOut();
+  });
+});
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
