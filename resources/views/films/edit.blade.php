@@ -1,9 +1,18 @@
 @extends('layouts.app')
-@section('titolo', 'Aggiungi Film')
+@section('titolo', 'Modifica Film')
 
 @section('content')
     <div class="container">
-        <form action="{{ route('film.update', $film->id) }}">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <form method="POST" action="{{ route('film.update',$film) }}">
             @method('PUT')
             @csrf
             <div class="form-group">

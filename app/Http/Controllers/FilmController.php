@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Movie;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Redirect;
 
 class FilmController extends Controller
 {
@@ -37,11 +40,10 @@ class FilmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Movie $film)
     {
-        $data = $request->all();
-
-        $request->validate([
+        
+        $data = $request->validate([
             'titolo' => 'required|unique:movies|max:255',
             'genere' => 'required|max:23',
             'trama' => 'required|max:255',
@@ -49,12 +51,8 @@ class FilmController extends Controller
             'anno' => 'required'
         ]);
 
-        $nuovoFilm = new Movie();
-
-
-        $nuovoFilm->fill($data);
-        $nuovoFilm->save();
-
+        $film->fill($data);
+        $film->save();
 
         return redirect()->route('film.index');
     }
@@ -65,12 +63,11 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Movie $film)
     {
-        $movie = Movie::find($id);
-        if ($movie) {
+        if ($film) {
             $data = [
-                'film' => $movie
+                'film' => $film
             ];
             return view('films.show',$data);
         }
@@ -83,12 +80,11 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Movie $film)
     {
-        $movie = Movie::find($id);
-        if ($movie) {
+        if ($film) {
             $data = [
-                'film' => $movie
+                'film' => $film
             ];
             return view('films.edit',$data);
         }
@@ -102,19 +98,19 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Movie $movie)
+    public function update(Request $request, Movie $film)
     {
-        $data = $request->all();
-        $request->validate([
-            'titolo' => 'required|unique:movies|max:255',
+        
+        $data = $request->validate([
+            'titolo' => ['required',Rule::unique('movies')->ignore($film),'max:255'],
             'genere' => 'required|max:23',
             'trama' => 'required|max:255',
             'regista' => 'required|max:80',
             'anno' => 'required'
         ]);
-        $movie->update($data);
+        $film->update($data);
 
-        return redirect()->route('film.index');
+        return redirect()->route('film.show',$film);
     }
 
     /**
@@ -123,11 +119,9 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Movie $film)
     {
-        $movie = Movie::find($id);
-        $movie->delete();
-
+        $film->delete();
         return redirect()->route('film.index');
     }
 }
