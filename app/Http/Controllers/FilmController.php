@@ -40,15 +40,17 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $nuovoFilm = new Movie();
 
         $request->validate([
-            'titolo' => 'required|max:255',
+            'titolo' => 'required|unique:movies|max:255',
             'genere' => 'required|max:23',
-            'trama' => 'required',
+            'trama' => 'required|max:255',
             'regista' => 'required|max:80',
             'anno' => 'required'
         ]);
+
+        $nuovoFilm = new Movie();
+
 
         $nuovoFilm->fill($data);
         $nuovoFilm->save();
@@ -65,11 +67,14 @@ class FilmController extends Controller
      */
     public function show($id)
     {
-        $id_film = Movie::findOrFail($id);
-        $data = [
-            'film' => $id_film
-        ];
-        return view('films.show',$data);
+        $movie = Movie::find($id);
+        if ($movie) {
+            $data = [
+                'film' => $movie
+            ];
+            return view('films.show',$data);
+        }
+        abort('404');
     }
 
     /**
@@ -80,7 +85,14 @@ class FilmController extends Controller
      */
     public function edit($id)
     {
-        //
+        $movie = Movie::find($id);
+        if ($movie) {
+            $data = [
+                'film' => $movie
+            ];
+            return view('films.edit',$data);
+        }
+        abort('404');
     }
 
     /**
@@ -90,9 +102,19 @@ class FilmController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Movie $movie)
     {
-        //
+        $data = $request->all();
+        $request->validate([
+            'titolo' => 'required|unique:movies|max:255',
+            'genere' => 'required|max:23',
+            'trama' => 'required|max:255',
+            'regista' => 'required|max:80',
+            'anno' => 'required'
+        ]);
+        $movie->update($data);
+
+        return redirect()->route('film.index');
     }
 
     /**
@@ -103,6 +125,9 @@ class FilmController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $movie = Movie::find($id);
+        $movie->delete();
+
+        return redirect()->route('film.index');
     }
 }
